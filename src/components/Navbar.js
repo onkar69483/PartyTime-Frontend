@@ -1,11 +1,24 @@
 "use client"
-import React, {useState} from 'react';
-import { FaSearch, FaStore, FaInfoCircle, FaMapMarkerAlt, FaUser } from 'react-icons/fa';
+import React from 'react';
+import { FaSearch, FaMapMarkerAlt } from 'react-icons/fa';
 import styles from '@/styles/navbar.module.css'
-import Image from 'next/image';
 import Link from 'next/link';
 
 const Navbar = (props) => {
+
+  function getLocn(){
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+      console.log("Geolocation is not supported by this browser.");
+  }
+    
+  function showPosition(position) {
+      let lat = position.coords.latitude; 
+      let lon = position.coords.longitude;
+      alert("Latitude: "+lat+" Longitude: "+lon);
+  }
+  }
   
   return (
     <nav className={styles.navbar}>
@@ -14,7 +27,7 @@ const Navbar = (props) => {
         <h1><Link className={styles.logo} href="/">Party Time</Link></h1>
         <div className={styles['navbar-location']}>
           <FaMapMarkerAlt />
-          <span>Set Location</span>
+          <span onClick={getLocn}>Set Location</span>
         </div>
       </div>
       <div className={styles['navbar-search']}>
@@ -27,7 +40,7 @@ const Navbar = (props) => {
         <Link className={styles.Login} href="/login"><img src="/icons/icons8-user-profile-96.png" alt="Login" />Login</Link>
         {
         props.on && (
-            <div className={styles.cart}>
+            <Link className={styles.cart} href="/cart">
               <img className={styles.cartImage} src="/icons/icons8-cart-96.png" alt="Cart"/>
               {props.totalQuantity === 0 || props.totalPrice === 0 ? (
                 <>
@@ -40,7 +53,7 @@ const Navbar = (props) => {
                   <div>₹{props.totalPrice}</div>
                 </div>
               )}
-            </div>
+            </Link>
           )
         }
 
